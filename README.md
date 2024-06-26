@@ -58,7 +58,7 @@ Please use the following bibtex entry to cite [qFALL-crypto](https://github.com/
 
 ```text
 @misc{qFALL-crypto,
-    author = {Porzenheim, Laurens and Beckmann, Marvin and Kramer, Paul and Milewski, Phil and Moog, Sven and Schmidt, Marcel and Siemer, Niklas}
+    author = {Porzenheim, Laurens and Beckmann, Marvin and Kramer, Paul and Milewski, Phil and Moog, Sven and Schmidt, Marcel and Siemer, Niklas},
     title = {qFALL-crypto v0.0},
     howpublished = {Online: \url{https://github.com/qfall/crypto}},
     month = Mar,
