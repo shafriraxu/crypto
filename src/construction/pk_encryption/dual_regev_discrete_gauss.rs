@@ -30,7 +30,7 @@ use serde::{Deserialize, Serialize};
 /// - `r`: specifies the Gaussian parameter used for SampleD,
 ///   i.e. used for encryption
 /// - `alpha`: specifies the Gaussian parameter used for independent
-/// sampling from the discrete Gaussian distribution
+///     sampling from the discrete Gaussian distribution
 ///
 /// # Examples
 /// ```
@@ -77,7 +77,7 @@ impl DualRegevWithDiscreteGaussianRegularity {
     /// - `r`: specifies the Gaussian parameter used for SampleD,
     ///   i.e. used for encryption
     /// - `alpha`: specifies the Gaussian parameter used for independent
-    /// sampling from the discrete Gaussian distribution
+    ///     sampling from the discrete Gaussian distribution
     ///
     /// Returns a [`DualRegevWithDiscreteGaussianRegularity`] PK encryption instance.
     ///
@@ -194,7 +194,7 @@ impl DualRegevWithDiscreteGaussianRegularity {
 
         // generate prime q in [n^power / 2, n^power]
         let upper_bound: Z = n.pow(power).unwrap();
-        let lower_bound = upper_bound.div_ceil(&Z::from(2));
+        let lower_bound = upper_bound.div_ceil(2);
         // prime used due to guide from GPV08 after Proposition 8.1
         // on how to choose appropriate parameters, but prime is not
         // necessarily needed for this scheme to be correct or secure
@@ -236,8 +236,8 @@ impl DualRegevWithDiscreteGaussianRegularity {
     ///
     /// # Errors and Failures
     /// - Returns a [`MathError`] of type [`InvalidIntegerInput`](MathError::InvalidIntegerInput)
-    /// if at least one parameter was not chosen appropriately for a
-    /// correct DualRegevWithDiscreteGaussianRegularity public key encryption instance.
+    ///     if at least one parameter was not chosen appropriately for a
+    ///     correct DualRegevWithDiscreteGaussianRegularity public key encryption instance.
     pub fn check_correctness(&self) -> Result<(), MathError> {
         let q: Z = Z::from(&self.q);
 
@@ -285,8 +285,8 @@ impl DualRegevWithDiscreteGaussianRegularity {
     ///
     /// # Errors and Failures
     /// - Returns a [`MathError`] of type [`InvalidIntegerInput`](MathError::InvalidIntegerInput)
-    /// if at least one parameter was not chosen appropriately for a
-    /// secure DualRegevWithDiscreteGaussianRegularity public key encryption instance.
+    ///     if at least one parameter was not chosen appropriately for a
+    ///     secure DualRegevWithDiscreteGaussianRegularity public key encryption instance.
     pub fn check_security(&self) -> Result<(), MathError> {
         let q: Z = Z::from(&self.q);
 
@@ -383,7 +383,7 @@ impl PKEncryptionScheme for DualRegevWithDiscreteGaussianRegularity {
     /// - vec_x <- χ^m, x <- χ
     /// - p = A^t * s + vec_x
     /// - c = u^t * s + x + message *  ⌊q/2⌋
-    /// where χ is discrete Gaussian distributed with center 0 and Gaussian parameter q * α.
+    ///     where χ is discrete Gaussian distributed with center 0 and Gaussian parameter q * α.
     ///
     /// Then, `cipher = (p, c)` is returned.
     ///
@@ -424,7 +424,7 @@ impl PKEncryptionScheme for DualRegevWithDiscreteGaussianRegularity {
         // p = u^t * s + vec_x
         let vec_p = &pk.0.transpose() * &vec_s + vec_x;
         // c = u^t * s + x + msg *  ⌊q/2⌋
-        let q_half = Z::from(&self.q).div_floor(&Z::from(2));
+        let q_half = Z::from(&self.q).div_floor(2);
         let c = pk.1.dot_product(&vec_s).unwrap() + x + message * q_half;
 
         (vec_p, c)
@@ -455,7 +455,7 @@ impl PKEncryptionScheme for DualRegevWithDiscreteGaussianRegularity {
     fn dec(&self, sk: &Self::SecretKey, cipher: &Self::Cipher) -> Z {
         let result = &cipher.1 - sk.dot_product(&cipher.0).unwrap();
 
-        let q_half = Z::from(&self.q).div_floor(&Z::from(2));
+        let q_half = Z::from(&self.q).div_floor(2);
 
         if result.distance(Z::ZERO) > result.distance(q_half) {
             Z::ONE
@@ -480,7 +480,7 @@ mod test_pp_generation {
         let _ = DualRegevWithDiscreteGaussianRegularity::new(2u16, 2u64, 2i32, 2i64, 2i16);
         let _ = DualRegevWithDiscreteGaussianRegularity::new(2i16, 2i64, 2u32, 2u8, 2u16);
         let _ =
-            DualRegevWithDiscreteGaussianRegularity::new(Z::from(2), &Z::from(2), 2u8, 2i8, 2u32);
+            DualRegevWithDiscreteGaussianRegularity::new(Z::from(2), Z::from(2), 2u8, 2i8, 2u32);
     }
 
     /// Checks whether `new_from_n` works properly for different choices of n.
@@ -524,6 +524,7 @@ mod test_pp_generation {
 
     /// Ensures that `new_from_n` is available for types implementing [`Into<Z>`].
     #[test]
+    #[allow(clippy::needless_borrows_for_generic_args)]
     fn new_from_n_availability() {
         let _ = DualRegevWithDiscreteGaussianRegularity::new_from_n(2u8);
         let _ = DualRegevWithDiscreteGaussianRegularity::new_from_n(2u16);

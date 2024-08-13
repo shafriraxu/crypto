@@ -105,7 +105,7 @@ mod test_fdh {
     /// Ensure that the generated signature is valid.
     #[test]
     fn ensure_valid_signature_is_generated() {
-        let mut fdh = FDH::init_gpv_ring(N, MODULUS, &compute_s());
+        let mut fdh = FDH::init_gpv_ring(N, MODULUS, compute_s());
         let (pk, sk) = fdh.gen();
 
         for i in 0..10 {
@@ -125,7 +125,7 @@ mod test_fdh {
     /// Ensure that an entry is actually added to the local storage.
     #[test]
     fn storage_filled() {
-        let mut fdh = FDH::init_gpv_ring(N, MODULUS, &compute_s());
+        let mut fdh = FDH::init_gpv_ring(N, MODULUS, compute_s());
 
         let m = "Hello World!";
         let (pk, sk) = fdh.gen();
@@ -139,7 +139,7 @@ mod test_fdh {
     /// Ensure that after deserialization the HashMap still contains all entries.
     #[test]
     fn reload_hashmap() {
-        let mut fdh = FDH::init_gpv_ring(N, MODULUS, &compute_s());
+        let mut fdh = FDH::init_gpv_ring(N, MODULUS, compute_s());
 
         // fill one entry in the HashMap
         let m = "Hello World!";

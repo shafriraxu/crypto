@@ -27,7 +27,7 @@ use serde::{Deserialize, Serialize};
 /// - `m`: defines the dimension of the underlying lattice
 /// - `q`: specifies the modulus over which the encryption is computed
 /// - `alpha`:  specifies the Gaussian parameter used for independent
-/// sampling from the discrete Gaussian distribution
+///     sampling from the discrete Gaussian distribution
 ///
 /// # Examples
 /// ```
@@ -71,7 +71,7 @@ impl DualRegev {
     /// - `m`: specifies the number of columns of matrix `A`
     /// - `q`: specifies the modulus
     /// - `alpha`:  specifies the Gaussian parameter used for independent
-    /// sampling from the discrete Gaussian distribution
+    ///     sampling from the discrete Gaussian distribution
     ///
     /// Returns [`DualRegev`] PK encryption instance.
     ///
@@ -183,7 +183,7 @@ impl DualRegev {
 
         // generate prime q in [n^power / 2, n^power]
         let upper_bound: Z = n.pow(power).unwrap();
-        let lower_bound = upper_bound.div_ceil(&Z::from(2));
+        let lower_bound = upper_bound.div_ceil(2);
         // prime used due to guide from GPV08 after Proposition 8.1
         // on how to choose appropriate parameters, but prime is not
         // necessarily needed for this scheme to be correct or secure
@@ -223,8 +223,8 @@ impl DualRegev {
     ///
     /// # Errors and Failures
     /// - Returns a [`MathError`] of type [`InvalidIntegerInput`](MathError::InvalidIntegerInput)
-    /// if at least one parameter was not chosen appropriately for a
-    /// correct Dual Regev public key encryption instance.
+    ///     if at least one parameter was not chosen appropriately for a
+    ///     correct Dual Regev public key encryption instance.
     pub fn check_correctness(&self) -> Result<(), MathError> {
         let q = Z::from(&self.q);
 
@@ -271,8 +271,8 @@ impl DualRegev {
     ///
     /// # Errors and Failures
     /// - Returns a [`MathError`] of type [`InvalidIntegerInput`](MathError::InvalidIntegerInput)
-    /// if at least one parameter was not chosen appropriately for a
-    /// secure Dual Regev public key encryption instance.
+    ///     if at least one parameter was not chosen appropriately for a
+    ///     secure Dual Regev public key encryption instance.
     pub fn check_security(&self) -> Result<(), MathError> {
         let q = Z::from(&self.q);
 
@@ -364,7 +364,7 @@ impl PKEncryptionScheme for DualRegev {
     /// - s <- Z_q^n
     /// - e <- χ^(m+1)
     /// - c^t = s^t * A + e^t + [0^{1xn} | msg *  ⌊q/2⌋]
-    /// where χ is discrete Gaussian distributed with center 0 and Gaussian parameter q * α.
+    ///     where χ is discrete Gaussian distributed with center 0 and Gaussian parameter q * α.
     ///
     /// Then, the ciphertext `c` is returned as a vector of type [`MatZq`].
     ///
@@ -404,7 +404,7 @@ impl PKEncryptionScheme for DualRegev {
 
         // hide message in last entry
         // compute msg * ⌊q/2⌋
-        let msg_q_half = message * Z::from(&self.q).div_floor(&Z::from(2));
+        let msg_q_half = message * Z::from(&self.q).div_floor(2);
         // set last entry of c = last_entry + msg * ⌊q/2⌋
         let last_entry: Zq = c.get_entry(-1, 0).unwrap();
         c.set_entry(-1, 0, last_entry + msg_q_half).unwrap();
@@ -440,7 +440,7 @@ impl PKEncryptionScheme for DualRegev {
             .unwrap();
         let result: Zq = (cipher.transpose() * tmp).get_entry(0, 0).unwrap();
 
-        let q_half = Z::from(&self.q).div_floor(&Z::from(2));
+        let q_half = Z::from(&self.q).div_floor(2);
 
         if result.distance(Z::ZERO) > result.distance(q_half) {
             Z::ONE
@@ -464,7 +464,7 @@ mod test_pp_generation {
         let _ = DualRegev::new(2u8, 2u16, 2u32, 2u64);
         let _ = DualRegev::new(2u16, 2u64, 2i32, 2i64);
         let _ = DualRegev::new(2i16, 2i64, 2u32, 2u8);
-        let _ = DualRegev::new(Z::from(2), &Z::from(2), 2u8, 2i8);
+        let _ = DualRegev::new(Z::from(2), Z::from(2), 2u8, 2i8);
     }
 
     /// Checks whether `new_from_n` works properly for different choices of n.
@@ -503,6 +503,7 @@ mod test_pp_generation {
 
     /// Ensures that `new_from_n` is available for types implementing [`Into<Z>`].
     #[test]
+    #[allow(clippy::needless_borrows_for_generic_args)]
     fn availability() {
         let _ = DualRegev::new_from_n(10u8);
         let _ = DualRegev::new_from_n(10u16);
