@@ -37,7 +37,7 @@ use std::collections::HashMap;
 /// - `dual_regev`: a [`DualRegev`] instance with fitting parameters `n`, `m`, `q`, `alpha`
 /// - `psf`: specifies the PSF used for extracting secret keys
 /// - `storage`: is a [`HashMap`] which stores all previously computed secret keys
-/// corresponding to their identities
+///     corresponding to their identities
 ///
 /// # Examples
 /// ```
@@ -135,7 +135,7 @@ impl DualRegevIBE {
 
         // generate prime q in [n^power / 2, n^power]
         let upper_bound: Z = n.pow(power).unwrap();
-        let lower_bound = upper_bound.div_ceil(&Z::from(2));
+        let lower_bound = upper_bound.div_ceil(2);
         // prime used due to guide from GPV08 after Proposition 8.1
         // on how to choose appropriate parameters, but prime is not
         // necessarily needed for this scheme to be correct or secure
@@ -181,8 +181,8 @@ impl DualRegevIBE {
     ///
     /// # Errors and Failures
     /// - Returns a [`MathError`] of type [`InvalidIntegerInput`](MathError::InvalidIntegerInput)
-    /// if at least one parameter was not chosen appropriately for a
-    /// secure Dual Regev public key encryption instance.
+    ///     if at least one parameter was not chosen appropriately for a
+    ///     secure Dual Regev public key encryption instance.
     pub fn check_security(&self) -> Result<(), MathError> {
         let q = Q::from(&self.dual_regev.q);
 
@@ -234,8 +234,8 @@ impl DualRegevIBE {
     ///
     /// # Errors and Failures
     /// - Returns a [`MathError`] of type [`InvalidIntegerInput`](MathError::InvalidIntegerInput)
-    /// if at least one parameter was not chosen appropriately for a
-    /// correct Dual Regev IBE public key encryption instance.
+    ///     if at least one parameter was not chosen appropriately for a
+    ///     correct Dual Regev IBE public key encryption instance.
     pub fn check_correctness(&self) -> Result<(), MathError> {
         if self.dual_regev.n <= Z::ONE {
             return Err(MathError::InvalidIntegerInput(String::from(
@@ -308,9 +308,9 @@ impl IBEScheme for DualRegevIBE {
     /// Parameters:
     /// - `master_pk`: The master public key for the encryption scheme
     /// - `master_sk`: Zhe master secret key of the encryption scheme, namely
-    /// the trapdoor for the [`PSF`]
+    ///     the trapdoor for the [`PSF`]
     /// - `identity`: The identity, for which the corresponding secret key
-    ///  should be returned
+    ///     should be returned
     ///
     /// Returns the corresponding secret key of `identity` under public key
     /// `master_pk`.
@@ -382,7 +382,7 @@ impl IBEScheme for DualRegevIBE {
         message: impl Into<Z>,
     ) -> Self::Cipher {
         let identity_based_pk =
-            hash_to_mat_zq_sha256(identity, master_pk.get_num_rows(), 1, &master_pk.get_mod());
+            hash_to_mat_zq_sha256(identity, master_pk.get_num_rows(), 1, master_pk.get_mod());
         self.dual_regev.enc(
             &master_pk.concat_horizontal(&identity_based_pk).unwrap(),
             message,
@@ -436,11 +436,12 @@ mod test_dual_regev_ibe {
         let _ = DualRegevIBE::new(2u8, 2u16, 2u32, 2u64);
         let _ = DualRegevIBE::new(2u16, 2u64, 2i32, 2i64);
         let _ = DualRegevIBE::new(2i16, 2i64, 2u32, 2u8);
-        let _ = DualRegevIBE::new(Z::from(2), &Z::from(2), 2u8, 2i8);
+        let _ = DualRegevIBE::new(Z::from(2), Z::from(2), 2u8, 2i8);
     }
 
     /// Ensures that `new_from_n` is available for types implementing [`Into<Z>`].
     #[test]
+    #[allow(clippy::needless_borrows_for_generic_args)]
     fn availability() {
         let _ = DualRegevIBE::new_from_n(4u8);
         let _ = DualRegevIBE::new_from_n(4u16);
