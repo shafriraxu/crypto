@@ -98,7 +98,7 @@ impl GadgetParameters {
     ///
     /// Parameters:
     /// - `n`: the security parameter for the generation
-    /// - `modulus`: the modulus over which the TrapGen operates
+    /// - `q`: the modulus over which the TrapGen operates
     ///
     /// Returns an instantiation of default GadgetParameters based on the references mentioned above
     ///
@@ -111,16 +111,16 @@ impl GadgetParameters {
     ///
     /// # Panics ...
     /// - if the security parameter `n` is not in `[1, i64::MAX]`.
-    /// - if `modulus <= 1`.
-    pub fn init_default(n: impl Into<Z>, modulus: impl Into<Modulus>) -> Self {
+    /// - if `q <= 1`.
+    pub fn init_default(n: impl Into<Z>, q: impl Into<Modulus>) -> Self {
         // panic if n < 1 (security parameter must be positive) and not larger than
         // [`i64`] because downstream matrices can be at most that size
-        let modulus = modulus.into();
-        let n = n.into();
+        let q = q.into();
+        let n: Z = n.into();
         assert!(n >= Z::ONE && n <= Z::from(i64::MAX));
 
         let base = Z::from(2);
-        let log_q = Z::from(&modulus).log_ceil(&base).unwrap();
+        let log_q = Z::from(&q).log_ceil(&base).unwrap();
         let n_log_q = &n * &log_q;
         let log_n = n.log_ceil(&base).unwrap();
         let m_bar = &n_log_q + &log_n.pow(2).unwrap();
@@ -129,7 +129,7 @@ impl GadgetParameters {
             k: log_q,
             m_bar,
             base,
-            q: modulus,
+            q,
             distribution: Box::new(PlusMinusOneZero),
         }
     }
@@ -150,7 +150,7 @@ impl GadgetParametersRing {
     ///
     /// Parameters:
     /// - `n`: the security parameter for the generation
-    /// - `modulus`: the modulus over which the TrapGen operates
+    /// - `q`: the modulus over which the TrapGen operates
     ///
     /// Returns an instantiation of default GadgetParameters based on the references mentioned above
     ///
@@ -163,18 +163,18 @@ impl GadgetParametersRing {
     ///
     /// # Panics ...
     /// - if the security parameter `n` is not in `[1, i64::MAX]`.
-    /// - if `modulus <= 1`.
-    pub fn init_default(n: impl Into<Z>, modulus: impl Into<Modulus>) -> Self {
+    /// - if `q <= 1`.
+    pub fn init_default(n: impl Into<Z>, q: impl Into<Modulus>) -> Self {
         // panic if n < 1 (security parameter must be positive) and not larger than
         // [`i64`] because downstream matrices can be at most that size
-        let modulus = modulus.into();
+        let q = q.into();
         let n = n.into();
         assert!(n >= Z::ONE && n <= Z::from(i64::MAX));
 
         let base = Z::from(2);
-        let log_q = Z::from(&modulus).log_ceil(&base).unwrap();
+        let log_q = Z::from(&q).log_ceil(&base).unwrap();
 
-        let poly_mod = new_anticyclic(&n, &modulus).unwrap();
+        let poly_mod = new_anticyclic(&n, &q).unwrap();
 
         Self {
             n,
@@ -182,7 +182,7 @@ impl GadgetParametersRing {
             m_bar: log_q + 2,
             base,
             modulus: poly_mod,
-            q: modulus,
+            q,
             distribution: Box::new(SampleZ),
         }
     }

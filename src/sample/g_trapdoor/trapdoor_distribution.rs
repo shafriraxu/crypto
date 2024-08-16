@@ -60,7 +60,7 @@ pub struct SampleZ;
 
 #[typetag::serde]
 impl TrapdoorDistribution for PlusMinusOneZero {
-    /// Sample a matrix from distribution with probability `1/2` for `0`
+    /// Sample a matrix where each entry has probability `1/2` for being `0`
     /// and `1/4` each for `+/-1`.
     ///
     /// Parameters:

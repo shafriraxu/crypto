@@ -9,9 +9,7 @@
 //! This module contains implementations of hash functions.
 
 pub mod sha256;
-mod sis;
-
-pub use sis::SISHash;
+pub mod sis;
 
 /// This trait should be implemented by hashes with domain [`str`].
 pub trait HashInto<DigestSpace> {

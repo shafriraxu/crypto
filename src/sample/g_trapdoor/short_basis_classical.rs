@@ -122,7 +122,8 @@ fn compute_w(params: &GadgetParameters, tag: &MatZq, a: &MatZq) -> MatZ {
 mod test_gen_short_basis_for_trapdoor {
     use super::gen_short_basis_for_trapdoor;
     use crate::sample::g_trapdoor::{
-        gadget_classical::gen_trapdoor, gadget_parameters::GadgetParameters, gen_trapdoor_default,
+        gadget_classical::gen_trapdoor, gadget_parameters::GadgetParameters,
+        gadget_default::gen_trapdoor_default,
     };
     use qfall_math::{
         integer::Z,

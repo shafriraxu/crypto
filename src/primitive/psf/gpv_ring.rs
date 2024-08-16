@@ -66,8 +66,7 @@ pub struct PSFGPVRing {
 impl PSF<MatPolynomialRingZq, (MatPolyOverZ, MatPolyOverZ), MatPolyOverZ, MatPolynomialRingZq>
     for PSFGPVRing
 {
-    /// Computes a G-Trapdoor according to the [`GadgetParametersRing`]
-    /// defined in the struct.
+    /// Computes a G-Trapdoor according to the [`GadgetParametersRing`].
     ///
     /// # Examples
     /// ```
