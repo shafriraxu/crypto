@@ -37,7 +37,7 @@ use qfall_math::{
 /// # Examples
 /// ```
 /// use qfall_crypto::sample::g_trapdoor::{gadget_parameters::GadgetParameters,
-/// gen_trapdoor_default};
+/// gadget_default::gen_trapdoor_default};
 /// use qfall_crypto::sample::g_trapdoor::short_basis_classical::gen_short_basis_for_trapdoor;
 /// use qfall_math::integer_mod_q::MatZq;
 ///

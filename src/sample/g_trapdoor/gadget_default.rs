@@ -32,7 +32,7 @@ use qfall_math::{
 ///
 /// # Examples
 /// ```
-/// use qfall_crypto::sample::g_trapdoor::gen_trapdoor_default;
+/// use qfall_crypto::sample::g_trapdoor::gadget_default::gen_trapdoor_default;
 ///
 /// let (a,r) = gen_trapdoor_default(42, 101);
 /// ```
@@ -71,7 +71,7 @@ pub fn gen_trapdoor_default(n: impl Into<Z>, modulus: impl Into<Modulus>) -> (Ma
 ///
 /// # Examples
 /// ```
-/// use qfall_crypto::sample::g_trapdoor::gen_trapdoor_ring_default;
+/// use qfall_crypto::sample::g_trapdoor::gadget_default::gen_trapdoor_ring_default;
 ///
 /// let (a,r, e) = gen_trapdoor_ring_default(100, 29, 10);;
 /// ```

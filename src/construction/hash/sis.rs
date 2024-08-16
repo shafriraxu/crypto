@@ -8,12 +8,6 @@
 
 //! This module contains an implementation of the collision-resistant
 //! SIS-based hash function.
-//!
-//! The main references are listed in the following:
-//! - \[1\] Peikert, Chris (2016).
-//!     A decade of lattice cryptography.
-//!     In: Theoretical Computer Science 10.4.
-//!     <https://web.eecs.umich.edu/~cpeikert/pubs/lattice-survey.pdf>
 
 use qfall_math::{
     error::MathError,
@@ -26,6 +20,8 @@ use serde::{Deserialize, Serialize};
 /// This struct keeps an instance of the [`SISHash`] including
 /// its key and public parameters implicitly stored as `n = key.#rows()`,
 /// `m = key.#columns`, and `q = key.modulus`.
+///
+/// This construction is implemented according to the description in [\[1\]](<index.html#:~:text=[1]>).
 ///
 /// Attributes:
 /// - `n`: specifies the security parameter, which is not equal to the bit-security level
