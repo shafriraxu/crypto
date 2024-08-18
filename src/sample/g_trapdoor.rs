@@ -35,9 +35,9 @@
 //!     Information Security. Berlin, Heidelberg: Springer Berlin Heidelberg, 2011.
 
 pub mod gadget_classical;
+pub mod gadget_default;
 pub mod gadget_parameters;
 pub mod gadget_ring;
 pub mod short_basis_classical;
 pub mod short_basis_ring;
 pub mod trapdoor_distribution;
-pub mod gadget_default;

@@ -8,7 +8,7 @@
 
 //! This module contains fundamental cryptographic constructions, on which other
 //! constructions can be build on.
-//! 
+//!
 //! Among others, these include encryption schemes and signature schemes.
 //! A construction is always build the same way:
 //!
