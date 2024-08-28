@@ -30,7 +30,7 @@ impl FDH<MatZq, (MatZ, MatQ), MatZ, MatZq, PSFGPV, HashMatZq> {
     ///
     /// Parameters:
     /// - `n`: The security parameter
-    /// - `modulus`: The modulus used for the G-Trapdoors
+    /// - `q`: The modulus used for the G-Trapdoors
     /// - `s`: The Gaussian parameter with which is sampled
     ///
     /// Returns an explicit implementation of a FDH-signature scheme.
@@ -50,20 +50,20 @@ impl FDH<MatZq, (MatZ, MatQ), MatZ, MatZq, PSFGPV, HashMatZq> {
     /// ```
     ///
     /// # Panics ...
-    /// - if `modulus <= 1`.
-    pub fn init_gpv(n: impl Into<Z>, modulus: impl Into<Modulus>, s: impl Into<Q>) -> Self {
+    /// - if `q <= 1`.
+    pub fn init_gpv(n: impl Into<Z>, q: impl Into<Modulus>, s: impl Into<Q>) -> Self {
         let n = n.into();
         let n_i64 = i64::try_from(&n).unwrap();
-        let modulus = modulus.into();
+        let q = q.into();
         let psf = PSFGPV {
-            gp: GadgetParameters::init_default(&n, &modulus),
+            gp: GadgetParameters::init_default(&n, &q),
             s: s.into(),
         };
         Self {
             psf: Box::new(psf),
             storage: HashMap::new(),
             hash: Box::new(HashMatZq {
-                modulus,
+                modulus: q,
                 rows: n_i64,
                 cols: 1,
             }),
@@ -93,9 +93,9 @@ mod test_fdh {
         // `s >= ||\tilde short_base|| * omega(sqrt{log m})`,
         // here `log(2*n*k) = omega(sqrt{log m}))` (Theorem 4.1 - GPV08)
         let s: Q = ((&n * &k).sqrt() + 1) * Q::from(2) * (Z::from(2) * &n * &k).log(2).unwrap();
-        let modulus = Z::from(2).pow(&k).unwrap();
+        let q = Z::from(2).pow(&k).unwrap();
 
-        let mut fdh = FDH::init_gpv(n, &modulus, &s);
+        let mut fdh = FDH::init_gpv(n, &q, &s);
         let (pk, sk) = fdh.gen();
 
         for i in 0..10 {

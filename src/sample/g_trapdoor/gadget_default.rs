@@ -26,7 +26,7 @@ use qfall_math::{
 ///
 /// Parameters:
 /// - `n`: the security parameter
-/// - `modulus`: the modulus for the trapdoor
+/// - `q`: the modulus for the trapdoor
 ///
 /// Returns a matrix `a` and its gadget-trapdoor `r` as in [\[1\]](<index.html#:~:text=[1]>): Algorithm 1 for some fixed set of parameters [`GadgetParameters::init_default`].
 ///
@@ -39,13 +39,13 @@ use qfall_math::{
 ///
 /// # Panics ...
 /// - if the security parameter `n` is not in `[1, i64::MAX]`.
-/// - if `modulus <= 1`.
-pub fn gen_trapdoor_default(n: impl Into<Z>, modulus: impl Into<Modulus>) -> (MatZq, MatZ) {
+/// - if `q <= 1`.
+pub fn gen_trapdoor_default(n: impl Into<Z>, q: impl Into<Modulus>) -> (MatZq, MatZ) {
     // panic if n < 1 (security parameter must be positive)
     let n = n.into();
     assert!(n >= Z::ONE);
 
-    let params = GadgetParameters::init_default(n, modulus);
+    let params = GadgetParameters::init_default(n, q);
 
     // a_bar <-$ Z_q^{n * m_bar}
     let a_bar = MatZq::sample_uniform(&params.n, &params.m_bar, &params.q);
@@ -64,7 +64,7 @@ pub fn gen_trapdoor_default(n: impl Into<Z>, modulus: impl Into<Modulus>) -> (Ma
 ///
 /// Parameters:
 /// - `n`: the security parameter
-/// - `modulus`: the modulus for the trapdoor
+/// - `q`: the modulus for the trapdoor
 ///
 /// Returns a matrix `a` and its gadget-trapdoor `(r,e)` as in [\[2\]](<index.html#:~:text=[2]>):
 /// Construction 1 for some fixed set of parameters [`GadgetParameters::init_default`].
@@ -78,10 +78,10 @@ pub fn gen_trapdoor_default(n: impl Into<Z>, modulus: impl Into<Modulus>) -> (Ma
 ///
 /// # Panics...
 /// - if the security parameter `n` is not in `[1, i64::MAX]`.
-/// - if `modulus <= 1`.
+/// - if `q <= 1`.
 pub fn gen_trapdoor_ring_default(
     n: impl Into<Z>,
-    modulus: impl Into<Modulus>,
+    q: impl Into<Modulus>,
     s: impl Into<Q>,
 ) -> (MatPolynomialRingZq, MatPolyOverZ, MatPolyOverZ) {
     // panic if n < 1 (security parameter must be positive)
@@ -89,7 +89,7 @@ pub fn gen_trapdoor_ring_default(
     assert!(n >= Z::ONE);
     let s = s.into();
 
-    let params = GadgetParametersRing::init_default(n, modulus);
+    let params = GadgetParametersRing::init_default(n, q);
 
     // a_bar <-$ Zq[X]^n
     let a_bar = PolyOverZ::sample_uniform(&params.n, 0, &params.q).unwrap();

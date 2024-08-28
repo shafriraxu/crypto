@@ -468,8 +468,8 @@ mod test_compute_s {
     /// Ensure that the matrix s is computed correctly for an arbitrary modulus.
     #[test]
     fn base_2_arbitrary() {
-        let modulus = Z::from(0b1100110);
-        let params = GadgetParametersRing::init_default(1, modulus);
+        let q = Z::from(0b1100110);
+        let params = GadgetParametersRing::init_default(1, q);
 
         let s = compute_s(&params);
 
@@ -511,8 +511,8 @@ mod test_compute_s {
     /// base 5.
     #[test]
     fn base_5_arbitrary() {
-        let modulus = Z::from_str_b("4123", 5).unwrap();
-        let mut params = GadgetParametersRing::init_default(1, modulus);
+        let q = Z::from_str_b("4123", 5).unwrap();
+        let mut params = GadgetParametersRing::init_default(1, q);
         params.k = Z::from(4);
         params.base = Z::from(5);
 

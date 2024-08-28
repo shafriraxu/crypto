@@ -42,7 +42,7 @@ impl
     ///
     /// Parameters:
     /// - `n`: The security parameter
-    /// - `modulus`: The modulus used for the G-Trapdoors
+    /// - `q`: The modulus used for the G-Trapdoors
     /// - `s`: The Gaussian parameter with which is sampled
     ///
     /// Returns an explicit implementation of an FDH-signature scheme.
@@ -61,13 +61,13 @@ impl
     /// ```
     ///
     /// # Panics ...
-    /// - if `modulus <= 1`.
-    pub fn init_gpv_ring(n: impl Into<Z>, modulus: impl Into<Modulus>, s: impl Into<Q>) -> Self {
+    /// - if `q <= 1`.
+    pub fn init_gpv_ring(n: impl Into<Z>, q: impl Into<Modulus>, s: impl Into<Q>) -> Self {
         let n = n.into();
-        let modulus = modulus.into();
+        let q = q.into();
         let s = s.into();
         let psf = PSFGPVRing {
-            gp: GadgetParametersRing::init_default(&n, &modulus),
+            gp: GadgetParametersRing::init_default(&n, &q),
             s,
             s_td: Q::from(1.005_f64),
         };
