@@ -83,12 +83,9 @@ impl PSF<MatPolynomialRingZq, (MatPolyOverZ, MatPolyOverZ), MatPolyOverZ, MatPol
     /// let (a, (r, e)) = psf.trap_gen();
     /// ```
     fn trap_gen(&self) -> (MatPolynomialRingZq, (MatPolyOverZ, MatPolyOverZ)) {
-        let a_bar = PolyOverZ::sample_uniform(
-            self.gp.modulus.get_degree() - 1,
-            0,
-            self.gp.modulus.get_q(),
-        )
-        .unwrap();
+        let a_bar =
+            PolyOverZ::sample_uniform(self.gp.modulus.get_degree() - 1, 0, self.gp.modulus.get_q())
+                .unwrap();
         let (a, r, e) = gen_trapdoor_ring_lwe(&self.gp, &a_bar, &self.s_td).unwrap();
 
         (a, (r, e))
