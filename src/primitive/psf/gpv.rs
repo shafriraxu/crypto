@@ -235,9 +235,9 @@ mod test_gpv_psf {
     /// Ensures that `samp_d` actually computes values that are in D_n.
     #[test]
     fn samp_d_samples_from_dn() {
-        for (n, modulus) in [(5, 256), (10, 128), (15, 157)] {
+        for (n, q) in [(5, 256), (10, 128), (15, 157)] {
             let psf = PSFGPV {
-                gp: GadgetParameters::init_default(n, modulus),
+                gp: GadgetParameters::init_default(n, q),
                 s: Q::from(10),
             };
 
@@ -251,9 +251,9 @@ mod test_gpv_psf {
     /// domain.
     #[test]
     fn samp_p_preimage_and_domain() {
-        for (n, modulus) in [(5, 256), (6, 128)] {
+        for (n, q) in [(5, 256), (6, 128)] {
             let psf = PSFGPV {
-                gp: GadgetParameters::init_default(n, modulus),
+                gp: GadgetParameters::init_default(n, q),
                 s: Q::from(10),
             };
             let (a, r) = psf.trap_gen();
@@ -269,9 +269,9 @@ mod test_gpv_psf {
     /// Ensures that `f_a` returns `a*sigma`.
     #[test]
     fn f_a_works_as_expected() {
-        for (n, modulus) in [(5, 256), (6, 128)] {
+        for (n, q) in [(5, 256), (6, 128)] {
             let psf = PSFGPV {
-                gp: GadgetParameters::init_default(n, modulus),
+                gp: GadgetParameters::init_default(n, q),
                 s: Q::from(10),
             };
             let (a, _) = psf.trap_gen();

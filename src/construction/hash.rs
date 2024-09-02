@@ -7,6 +7,12 @@
 // Mozilla Foundation. See <https://mozilla.org/en-US/MPL/2.0/>.
 
 //! This module contains implementations of hash functions.
+//!
+//! The main references are listed in the following:
+//! - \[1\] Peikert, Chris (2016).
+//!     A decade of lattice cryptography.
+//!     In: Theoretical Computer Science 10.4.
+//!     <https://web.eecs.umich.edu/~cpeikert/pubs/lattice-survey.pdf>
 
 pub mod sha256;
 mod sis;

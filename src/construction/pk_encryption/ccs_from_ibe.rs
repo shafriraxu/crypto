@@ -8,7 +8,7 @@
 
 //! This module contains a general implementation of an IND-CCA secure
 //! public key encryption scheme constructed
-//! via an [`IBEScheme`] scheme and a [`SignatureScheme`].
+//! via an [`IBEScheme`] and a [`SignatureScheme`].
 
 use super::PKEncryptionSchemeMut;
 use crate::construction::{identity_based_encryption::IBEScheme, signature::SignatureScheme};

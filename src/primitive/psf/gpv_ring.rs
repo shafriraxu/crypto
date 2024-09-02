@@ -66,8 +66,7 @@ pub struct PSFGPVRing {
 impl PSF<MatPolynomialRingZq, (MatPolyOverZ, MatPolyOverZ), MatPolyOverZ, MatPolynomialRingZq>
     for PSFGPVRing
 {
-    /// Computes a G-Trapdoor according to the [`GadgetParametersRing`]
-    /// defined in the struct.
+    /// Computes a G-Trapdoor according to the [`GadgetParametersRing`].
     ///
     /// # Examples
     /// ```
@@ -85,7 +84,8 @@ impl PSF<MatPolynomialRingZq, (MatPolyOverZ, MatPolyOverZ), MatPolyOverZ, MatPol
     /// ```
     fn trap_gen(&self) -> (MatPolynomialRingZq, (MatPolyOverZ, MatPolyOverZ)) {
         let a_bar =
-            PolyOverZ::sample_uniform(self.gp.modulus.get_degree() - 1, 0, &self.gp.q).unwrap();
+            PolyOverZ::sample_uniform(self.gp.modulus.get_degree() - 1, 0, self.gp.modulus.get_q())
+                .unwrap();
         let (a, r, e) = gen_trapdoor_ring_lwe(&self.gp, &a_bar, &self.s_td).unwrap();
 
         (a, (r, e))
@@ -171,8 +171,8 @@ impl PSF<MatPolynomialRingZq, (MatPolyOverZ, MatPolyOverZ), MatPolyOverZ, MatPol
             .into_coefficient_embedding_from_matrix(self.gp.modulus.get_degree());
         let rot_a = rot_minus_matrix(&a_embedded);
 
-        let u_embedded = MatZq::from((&u_embedded, &self.gp.q));
-        let rot_a = MatZq::from((&rot_a, &self.gp.q));
+        let u_embedded = MatZq::from((&u_embedded, &self.gp.modulus.get_q()));
+        let rot_a = MatZq::from((&rot_a, &self.gp.modulus.get_q()));
         let sol: MatZ = (&rot_a.solve_gaussian_elimination(&u_embedded).unwrap()).into();
 
         // turn center into a vector of polynomials over Q with maximal degree as the
@@ -292,9 +292,9 @@ mod test_gpv_psf {
     /// Ensures that `samp_d` actually computes values that are in D_n.
     #[test]
     fn samp_d_samples_from_dn() {
-        let (n, modulus) = (5, 123456789);
+        let (n, q) = (5, 123456789);
         let psf = PSFGPVRing {
-            gp: GadgetParametersRing::init_default(n, modulus),
+            gp: GadgetParametersRing::init_default(n, q),
             s: Q::from(1000),
             s_td: Q::from(1.005_f64),
         };
@@ -308,9 +308,9 @@ mod test_gpv_psf {
     /// domain.
     #[test]
     fn samp_p_preimage_and_domain() {
-        for (n, modulus) in [(5, i32::MAX - 57), (6, i32::MAX)] {
+        for (n, q) in [(5, i32::MAX - 57), (6, i32::MAX)] {
             let psf = PSFGPVRing {
-                gp: GadgetParametersRing::init_default(n, modulus),
+                gp: GadgetParametersRing::init_default(n, q),
                 s: compute_s(n),
                 s_td: Q::from(1.005_f64),
             };
@@ -328,9 +328,9 @@ mod test_gpv_psf {
     /// Ensures that `f_a` returns `a*sigma`.
     #[test]
     fn f_a_works_as_expected() {
-        for (n, modulus) in [(5, 256), (6, 128)] {
+        for (n, q) in [(5, 256), (6, 128)] {
             let psf = PSFGPVRing {
-                gp: GadgetParametersRing::init_default(n, modulus),
+                gp: GadgetParametersRing::init_default(n, q),
                 s: compute_s(n),
                 s_td: Q::from(1.005_f64),
             };

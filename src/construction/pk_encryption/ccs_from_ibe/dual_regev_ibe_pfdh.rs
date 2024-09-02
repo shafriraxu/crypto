@@ -27,7 +27,7 @@ impl CCSfromIBE<DualRegevIBE, PFDH<MatZq, (MatZ, MatQ), MatZ, MatZq, PSFGPV, Has
     ///
     /// Parameters:
     /// - `n`: specifies the security parameter
-    /// - `modulus`: specifies the modulus
+    /// - `q`: specifies the modulus
     /// - `r`: specifies the Gaussian parameter used for the [`PSFGPV`] for the [`PFDH`]
     /// - `randomness_length`: specifies the number of bits added to the message before signing
     /// - `alpha`: specifies the Gaussian parameter used for encryption in
@@ -43,21 +43,21 @@ impl CCSfromIBE<DualRegevIBE, PFDH<MatZq, (MatZ, MatQ), MatZ, MatZq, PSFGPV, Has
     /// ```
     ///
     /// # Panics ...
-    /// - if `modulus <= 1`.
+    /// - if `q <= 1`.
     /// - if `n < 1` or `n` does not fit into an [`i64`].
     pub fn init_dr_pfdh(
         n: impl Into<Z>, // security parameter
-        modulus: impl Into<Modulus>,
+        q: impl Into<Modulus>,
         randomness_length: impl Into<Z>, // added to the message before signing
         r: impl Into<Q>,                 // Gaussian parameter for PSF
         alpha: impl Into<Q>,             // Gaussian parameter for Dual Regev Encryption
     ) -> Self {
         let n = n.into();
-        let modulus = modulus.into();
+        let q = q.into();
         let r = r.into();
 
-        let dr_ibe = DualRegevIBE::new(&n, &modulus, &r, alpha);
-        let pfdh = PFDH::init_gpv(n, modulus, r, randomness_length);
+        let dr_ibe = DualRegevIBE::new(&n, &q, &r, alpha);
+        let pfdh = PFDH::init_gpv(n, q, r, randomness_length);
 
         Self {
             ibe: dr_ibe,

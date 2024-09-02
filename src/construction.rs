@@ -8,8 +8,9 @@
 
 //! This module contains fundamental cryptographic constructions, on which other
 //! constructions can be build on.
-//! Among others these include encryption schemes and signature schemes.
-//! A construction is build the same way:
+//!
+//! Among others, these include encryption schemes and signature schemes.
+//! A construction is always build the same way:
 //!
 //! 1. A trait that combines the common feature, e.g.
 //!     [`public key encryption`](pk_encryption::PKEncryptionScheme).

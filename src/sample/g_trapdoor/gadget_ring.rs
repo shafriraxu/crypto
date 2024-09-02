@@ -42,7 +42,7 @@ use std::fmt::Display;
 /// use qfall_math::integer::PolyOverZ;
 ///
 /// let params = GadgetParametersRing::init_default(8, 17);
-/// let a_bar = PolyOverZ::sample_uniform(&params.n, 0, &params.q).unwrap();
+/// let a_bar = PolyOverZ::sample_uniform(&params.n, 0, &params.modulus.get_q()).unwrap();
 ///
 /// let (a, r, e) = gen_trapdoor_ring_lwe(&params, &a_bar, 10).unwrap();
 /// ```
@@ -188,7 +188,7 @@ mod test_gen_trapdoor_ring {
     #[test]
     fn is_trapdoor() {
         let params = GadgetParametersRing::init_default(6, 32);
-        let a_bar = PolyOverZ::sample_uniform(&params.n, 0, &params.q).unwrap();
+        let a_bar = PolyOverZ::sample_uniform(&params.n, 0, params.modulus.get_q()).unwrap();
 
         // call gen_trapdoor to get matrix a and its 'trapdoor' r
         let (a, r, e) = gen_trapdoor_ring_lwe(&params, &a_bar, 10).unwrap();

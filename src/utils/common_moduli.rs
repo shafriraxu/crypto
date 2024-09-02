@@ -16,14 +16,14 @@ use qfall_math::{
 };
 use std::fmt::Display;
 
-/// Outputs a [`ModulusPolynomialRingZq`] of the form `X^n + 1 mod modulus`.
+/// Outputs a [`ModulusPolynomialRingZq`] of the form `X^n + 1 mod q`.
 ///
 /// Parameters:
 /// - `n`: specifies the degree of the modulus polynomial
-/// - `modulus`: specifies the modulus of the modulus polynomial
+/// - `q`: specifies the modulus of the modulus polynomial
 ///
-/// Returns a [`ModulusPolynomialRingZq`] of the form `X^n + 1 mod modulus` or
-/// a [`MathError`] if `modulus <= 1`, `n < 0`, or `n` does not into an [`i64`].
+/// Returns a [`ModulusPolynomialRingZq`] of the form `X^n + 1 mod q` or
+/// a [`MathError`] if `q <= 1`, `n < 0`, or `n` does not into an [`i64`].
 ///
 /// # Examples
 /// ```
@@ -37,24 +37,24 @@ use std::fmt::Display;
 ///     the `n` is negative or it does not fit into an [`i64`].
 ///
 /// # Panics ...
-/// - if the `modulus` is not larger than `1`.
+/// - if the `q` is not larger than `1`.
 pub fn new_anticyclic(
     n: impl TryInto<i64> + Display,
-    modulus: impl Into<Modulus>,
+    q: impl Into<Modulus>,
 ) -> Result<ModulusPolynomialRingZq, MathError> {
-    let mut poly = PolyOverZq::from((1, modulus));
+    let mut poly = PolyOverZq::from((1, q));
     poly.set_coeff(n, 1)?;
     Ok(ModulusPolynomialRingZq::from(&poly))
 }
 
-/// Outputs a [`ModulusPolynomialRingZq`] of the form `X^n - 1 mod modulus`.
+/// Outputs a [`ModulusPolynomialRingZq`] of the form `X^n - 1 mod q`.
 ///
 /// Parameters:
 /// - `n`: specifies the degree of the modulus polynomial
-/// - `modulus`: specifies the modulus of the modulus polynomial
+/// - `q`: specifies the modulus of the modulus polynomial
 ///
-/// Returns a [`ModulusPolynomialRingZq`] of the form `X^n - 1 mod modulus` or
-/// a [`MathError`] if `modulus <= 1`, `n < 0`, or `n` does not into an [`i64`].
+/// Returns a [`ModulusPolynomialRingZq`] of the form `X^n - 1 mod q` or
+/// a [`MathError`] if `q <= 1`, `n < 0`, or `n` does not into an [`i64`].
 ///
 /// # Examples
 /// ```
@@ -68,12 +68,12 @@ pub fn new_anticyclic(
 ///     the `n` is negative or it does not fit into an [`i64`].
 ///
 /// # Panics ...
-/// - if the `modulus` is not larger than `1`.
+/// - if the `q` is not larger than `1`.
 pub fn new_cyclic(
     n: impl TryInto<i64> + Display,
-    modulus: impl Into<Modulus>,
+    q: impl Into<Modulus>,
 ) -> Result<ModulusPolynomialRingZq, MathError> {
-    let mut poly = PolyOverZq::from((-1, modulus));
+    let mut poly = PolyOverZq::from((-1, q));
     poly.set_coeff(n, 1)?;
     Ok(ModulusPolynomialRingZq::from(&poly))
 }

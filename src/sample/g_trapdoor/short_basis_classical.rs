@@ -37,7 +37,7 @@ use qfall_math::{
 /// # Examples
 /// ```
 /// use qfall_crypto::sample::g_trapdoor::{gadget_parameters::GadgetParameters,
-/// gen_trapdoor_default};
+/// gadget_default::gen_trapdoor_default};
 /// use qfall_crypto::sample::g_trapdoor::short_basis_classical::gen_short_basis_for_trapdoor;
 /// use qfall_math::integer_mod_q::MatZq;
 ///
@@ -122,7 +122,8 @@ fn compute_w(params: &GadgetParameters, tag: &MatZq, a: &MatZq) -> MatZ {
 mod test_gen_short_basis_for_trapdoor {
     use super::gen_short_basis_for_trapdoor;
     use crate::sample::g_trapdoor::{
-        gadget_classical::gen_trapdoor, gadget_parameters::GadgetParameters, gen_trapdoor_default,
+        gadget_classical::gen_trapdoor, gadget_default::gen_trapdoor_default,
+        gadget_parameters::GadgetParameters,
     };
     use qfall_math::{
         integer::Z,
@@ -135,15 +136,15 @@ mod test_gen_short_basis_for_trapdoor {
     #[test]
     fn is_basis_not_power_tag_identity() {
         for n in [1, 5, 10, 12] {
-            let modulus = Modulus::from(127 + 3 * n);
-            let params = GadgetParameters::init_default(n, &modulus);
-            let (a, r) = gen_trapdoor_default(&params.n, &modulus);
+            let q = Modulus::from(127 + 3 * n);
+            let params = GadgetParameters::init_default(n, &q);
+            let (a, r) = gen_trapdoor_default(&params.n, &q);
 
-            let tag = MatZq::identity(&params.n, &params.n, &modulus);
+            let tag = MatZq::identity(&params.n, &params.n, &q);
 
             let short_basis = gen_short_basis_for_trapdoor(&params, &tag, &a, &r);
 
-            let zero_vec = MatZq::new(a.get_num_rows(), 1, &modulus);
+            let zero_vec = MatZq::new(a.get_num_rows(), 1, &q);
 
             for i in 0..short_basis.get_num_columns() {
                 assert_eq!(zero_vec, &a * short_basis.get_column(i).unwrap())
@@ -156,8 +157,8 @@ mod test_gen_short_basis_for_trapdoor {
     #[test]
     fn is_basis_with_tag_factor_identity() {
         for n in [2, 5, 10, 12] {
-            let modulus = Modulus::from(124 + 2 * n);
-            let params = GadgetParameters::init_default(n, &modulus);
+            let q = Modulus::from(124 + 2 * n);
+            let params = GadgetParameters::init_default(n, &q);
 
             let tag = 17 * MatZq::identity(n, n, &params.q);
             let a_bar = MatZq::sample_uniform(n, &params.m_bar, &params.q);
@@ -166,7 +167,7 @@ mod test_gen_short_basis_for_trapdoor {
 
             let short_basis = gen_short_basis_for_trapdoor(&params, &tag, &a, &r);
 
-            let zero_vec = MatZq::new(a.get_num_rows(), 1, &modulus);
+            let zero_vec = MatZq::new(a.get_num_rows(), 1, &q);
             for i in 0..short_basis.get_num_columns() {
                 assert_eq!(zero_vec, &a * short_basis.get_column(i).unwrap())
             }
@@ -178,17 +179,17 @@ mod test_gen_short_basis_for_trapdoor {
     #[test]
     fn is_basis_with_tag_arbitrarily() {
         for n in [2, 5, 10, 12] {
-            let modulus = Modulus::from(124 + 2 * n);
-            let params = GadgetParameters::init_default(n, &modulus);
+            let q = Modulus::from(124 + 2 * n);
+            let params = GadgetParameters::init_default(n, &q);
 
-            let tag = calculate_invertible_tag(n, &modulus);
+            let tag = calculate_invertible_tag(n, &q);
             let a_bar = MatZq::sample_uniform(n, &params.m_bar, &params.q);
 
             let (a, r) = gen_trapdoor(&params, &a_bar, &tag).unwrap();
 
             let short_basis = gen_short_basis_for_trapdoor(&params, &tag, &a, &r);
 
-            let zero_vec = MatZq::new(a.get_num_rows(), 1, &modulus);
+            let zero_vec = MatZq::new(a.get_num_rows(), 1, &q);
             for i in 0..short_basis.get_num_columns() {
                 assert_eq!(zero_vec, &a * short_basis.get_column(i).unwrap())
             }
@@ -200,9 +201,9 @@ mod test_gen_short_basis_for_trapdoor {
     #[test]
     fn ensure_orthogonalized_length_perfect_power() {
         for n in [1, 5, 7] {
-            let modulus = Modulus::from(128);
-            let params = GadgetParameters::init_default(n, &modulus);
-            let tag = calculate_invertible_tag(n, &modulus);
+            let q = Modulus::from(128);
+            let params = GadgetParameters::init_default(n, &q);
+            let tag = calculate_invertible_tag(n, &q);
             let a_bar = MatZq::sample_uniform(n, &params.m_bar, &params.q);
 
             let (a, r) = gen_trapdoor(&params, &a_bar, &tag).unwrap();
@@ -227,9 +228,9 @@ mod test_gen_short_basis_for_trapdoor {
     #[test]
     fn ensure_orthogonalized_length_not_perfect_power() {
         for n in [1, 5, 7] {
-            let modulus = Modulus::from(127);
-            let params = GadgetParameters::init_default(n, &modulus);
-            let tag = calculate_invertible_tag(n, &modulus);
+            let q = Modulus::from(127);
+            let params = GadgetParameters::init_default(n, &q);
+            let tag = calculate_invertible_tag(n, &q);
             let a_bar = MatZq::sample_uniform(n, &params.m_bar, &params.q);
 
             let (a, r) = gen_trapdoor(&params, &a_bar, &tag).unwrap();
@@ -251,9 +252,9 @@ mod test_gen_short_basis_for_trapdoor {
 
     /// Generates an invertible tag matrix (generates a diagonal matrix) and sets entries
     /// above the diagonal uniformly at random.
-    fn calculate_invertible_tag(size: i64, modulus: &Modulus) -> MatZq {
-        let max_value = Z::from(modulus);
-        let mut out = MatZq::identity(size, size, modulus);
+    fn calculate_invertible_tag(size: i64, q: &Modulus) -> MatZq {
+        let max_value = Z::from(q);
+        let mut out = MatZq::identity(size, size, q);
         // create a diagonal matrix with random values (because it is a diagonal matrix
         // with `1` on the diagonal, it is always invertible)
         for row in 0..size {
@@ -389,8 +390,8 @@ mod test_compute_s {
     /// Ensure that the matrix s is computed correctly for a an arbitrary modulus.
     #[test]
     fn base_2_arbitrary() {
-        let modulus = Z::from(0b1100110);
-        let params = GadgetParameters::init_default(1, modulus);
+        let q = Z::from(0b1100110);
+        let params = GadgetParameters::init_default(1, q);
 
         let s = compute_s(&params);
 
@@ -431,8 +432,8 @@ mod test_compute_s {
     /// base 5.
     #[test]
     fn base_5_arbitrary() {
-        let modulus = Z::from_str_b("4123", 5).unwrap();
-        let mut params = GadgetParameters::init_default(1, modulus);
+        let q = Z::from_str_b("4123", 5).unwrap();
+        let mut params = GadgetParameters::init_default(1, q);
         params.k = Z::from(4);
         params.base = Z::from(5);
 

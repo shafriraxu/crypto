@@ -6,7 +6,7 @@
 // the terms of the Mozilla Public License Version 2.0 as published by the
 // Mozilla Foundation. See <https://mozilla.org/en-US/MPL/2.0/>.
 
-//! This module contains hashes into different domains.
+//! This module contains sha256 hashes into different domains.
 
 use super::HashInto;
 use qfall_math::utils::index::evaluate_indices;
@@ -41,11 +41,11 @@ pub fn sha256(string: &str) -> String {
     format!("{:x}", result)
 }
 
-/// Hashes a given String literal into a `Zq`.
+/// Hashes a given String literal into a [`Zq`] using sha256.
 ///
 /// Parameters:
 /// - `string`: specifies the value that is hashed.
-/// - `modulus`: specifies the modulus of the returned `Zq` value
+/// - `modulus`: specifies the modulus of the returned [`Zq`] value
 ///
 /// Returns a [`Zq`] as a hash value for the given string.
 ///
@@ -82,7 +82,7 @@ pub fn hash_to_zq_sha256(string: &str, modulus: impl Into<Modulus>) -> Zq {
     Zq::from((Z::from_str_b(&hex, 16).unwrap(), modulus))
 }
 
-/// Hashes a given String literal into a [`MatZq`] .
+/// Hashes a given String literal into a [`MatZq`] using sha256.
 ///
 /// Parameters:
 /// - `string`: specifies the value that is hashed
@@ -132,7 +132,7 @@ pub fn hash_to_mat_zq_sha256(
     matrix
 }
 
-/// Hash object to hash a String into a [`MatZq`].
+/// Object for hashing Strings into a [`MatZq`].
 /// The object fixes the modulus and the corresponding dimensions.
 ///
 /// Parameters:
@@ -165,7 +165,7 @@ pub struct HashMatZq {
 }
 
 impl HashInto<MatZq> for HashMatZq {
-    /// Hashes a given String literal into a [`MatZq`].
+    /// Hashes a given String literal into a [`MatZq`] using sha256.
     /// The dimensions and the modulus is fixed by the hash object.
     ///
     /// Parameters:
@@ -193,7 +193,7 @@ impl HashInto<MatZq> for HashMatZq {
     }
 }
 
-/// Hash object to hash a String into a [`MatPolynomialRingZq`].
+/// Object for hashing Strings into a [`MatPolynomialRingZq`].
 /// The object fixes the modulus and the corresponding dimensions.
 ///
 /// Parameters:
@@ -223,8 +223,9 @@ pub struct HashMatPolynomialRingZq {
     pub rows: i64,
     pub cols: i64,
 }
+
 impl HashInto<MatPolynomialRingZq> for HashMatPolynomialRingZq {
-    /// Hashes a given String literal into a [`MatPolynomialRingZq`].
+    /// Hashes a given String literal into a [`MatPolynomialRingZq`] using sha256.
     /// The dimensions and the modulus is fixed by the hash object.
     ///
     /// Parameters:
