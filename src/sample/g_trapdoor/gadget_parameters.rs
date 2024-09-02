@@ -61,8 +61,7 @@ pub struct GadgetParameters {
 /// - `m_bar`: has to be chose appropriately for regularity and for
 ///     the distribution to be sub-Gaussian
 /// - `base`: the base with which the gadget-vector and matrix are generated
-/// - `q`: the modulus
-/// - `modulus`: the polynomial that is used for reduction
+/// - `modulus`: holds the modulus q and the polynomial that is used for reduction
 /// - `distribution`: the distribution from which the matrix `A_bar` is sampled
 ///
 /// # Examples
@@ -77,7 +76,6 @@ pub struct GadgetParametersRing {
     pub k: Z,
     pub m_bar: Z,
     pub base: Z,
-    pub q: Modulus,
     pub modulus: ModulusPolynomialRingZq,
     pub distribution: Box<dyn TrapdoorDistributionRing>,
 }
@@ -182,7 +180,6 @@ impl GadgetParametersRing {
             m_bar: log_q + 2,
             base,
             modulus: poly_mod,
-            q,
             distribution: Box::new(SampleZ),
         }
     }

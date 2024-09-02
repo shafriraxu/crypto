@@ -92,7 +92,7 @@ pub fn gen_trapdoor_ring_default(
     let params = GadgetParametersRing::init_default(n, q);
 
     // a_bar <-$ Zq[X]^n
-    let a_bar = PolyOverZ::sample_uniform(&params.n, 0, &params.q).unwrap();
+    let a_bar = PolyOverZ::sample_uniform(&params.n, 0, params.modulus.get_q()).unwrap();
 
     // we can unwrap, as we compute the parameters on our own and
     // they should always work

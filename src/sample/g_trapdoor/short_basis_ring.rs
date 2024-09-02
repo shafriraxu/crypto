@@ -106,7 +106,7 @@ fn gen_sa_r(params: &GadgetParametersRing, a: &MatPolynomialRingZq) -> MatPolyOv
     // the ring and by applying the tensor product lift it to a short base for
     // `Λ^⟂(g^t)` in the ring.
     let mut s = compute_s(params);
-    if params.base.pow(&params.k).unwrap() == Z::from(&params.q) {
+    if params.base.pow(&params.k).unwrap() == params.modulus.get_q() {
         s.reverse_columns();
     }
     let s = poly_degrees.tensor_product(&s);
@@ -145,14 +145,14 @@ fn compute_s(params: &GadgetParametersRing) -> MatPolyOverZ {
     for i in 0..(sk.get_num_rows() - 1) {
         sk.set_entry(i + 1, i, PolyOverZ::from(-1)).unwrap();
     }
-    sk = if params.base.pow(&params.k).unwrap() == Z::from(&params.q) {
+    sk = if params.base.pow(&params.k).unwrap() == params.modulus.get_q() {
         // compute s in the special case where the modulus is a power of base
         // i.e. the last column can remain as it is
         sk
     } else {
         // compute s for any arbitrary modulus
         // represent modulus in `base` and set last row accordingly
-        let mut q = Z::from(&params.q);
+        let mut q = Z::from(&params.modulus.get_q());
         for i in 0..(sk.get_num_rows()) {
             let q_i = Zq::from((&q, &params.base)).get_value();
             sk.set_entry(i, sk.get_num_columns() - 1, PolyOverZ::from(&q_i))
@@ -183,7 +183,7 @@ mod test_gen_short_basis_for_trapdoor_ring {
     fn is_basis() {
         for n in [5, 10, 12] {
             let params = GadgetParametersRing::init_default(n, 16);
-            let a_bar = PolyOverZ::sample_uniform(&params.n, 0, &params.q).unwrap();
+            let a_bar = PolyOverZ::sample_uniform(&params.n, 0, params.modulus.get_q()).unwrap();
 
             let (a, r, e) = gen_trapdoor_ring_lwe(&params, &a_bar, 5).unwrap();
 
@@ -204,7 +204,7 @@ mod test_gen_short_basis_for_trapdoor_ring {
     fn basis_is_reduced() {
         for n in [5, 10, 12] {
             let params = GadgetParametersRing::init_default(n, 16);
-            let a_bar = PolyOverZ::sample_uniform(&params.n, 0, &params.q).unwrap();
+            let a_bar = PolyOverZ::sample_uniform(&params.n, 0, params.modulus.get_q()).unwrap();
 
             let (a, r, e) = gen_trapdoor_ring_lwe(&params, &a_bar, 5).unwrap();
 
@@ -224,7 +224,7 @@ mod test_gen_short_basis_for_trapdoor_ring {
     fn ensure_orthogonalized_length_perfect_power() {
         for n in 4..8 {
             let params = GadgetParametersRing::init_default(n, 32);
-            let a_bar = PolyOverZ::sample_uniform(&params.n, 0, &params.q).unwrap();
+            let a_bar = PolyOverZ::sample_uniform(&params.n, 0, params.modulus.get_q()).unwrap();
 
             let (a, r, e) = gen_trapdoor_ring_lwe(&params, &a_bar, 5).unwrap();
 
@@ -285,7 +285,7 @@ mod test_gen_short_basis_for_trapdoor_ring {
     fn ensure_orthogonalized_length_not_perfect_power() {
         for n in 4..8 {
             let params = GadgetParametersRing::init_default(n, 42);
-            let a_bar = PolyOverZ::sample_uniform(&params.n, 0, &params.q).unwrap();
+            let a_bar = PolyOverZ::sample_uniform(&params.n, 0, params.modulus.get_q()).unwrap();
 
             let (a, r, e) = gen_trapdoor_ring_lwe(&params, &a_bar, 5).unwrap();
 
@@ -547,7 +547,7 @@ mod test_compute_w {
     #[test]
     fn check_w_is_correct_solution() {
         let params = GadgetParametersRing::init_default(8, 16);
-        let a_bar = PolyOverZ::sample_uniform(&params.n, 0, &params.q).unwrap();
+        let a_bar = PolyOverZ::sample_uniform(&params.n, 0, params.modulus.get_q()).unwrap();
 
         let (a, _, _) = gen_trapdoor_ring_lwe(&params, &a_bar, 5).unwrap();
 

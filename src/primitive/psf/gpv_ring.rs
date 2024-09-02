@@ -83,8 +83,12 @@ impl PSF<MatPolynomialRingZq, (MatPolyOverZ, MatPolyOverZ), MatPolyOverZ, MatPol
     /// let (a, (r, e)) = psf.trap_gen();
     /// ```
     fn trap_gen(&self) -> (MatPolynomialRingZq, (MatPolyOverZ, MatPolyOverZ)) {
-        let a_bar =
-            PolyOverZ::sample_uniform(self.gp.modulus.get_degree() - 1, 0, &self.gp.q).unwrap();
+        let a_bar = PolyOverZ::sample_uniform(
+            self.gp.modulus.get_degree() - 1,
+            0,
+            self.gp.modulus.get_q(),
+        )
+        .unwrap();
         let (a, r, e) = gen_trapdoor_ring_lwe(&self.gp, &a_bar, &self.s_td).unwrap();
 
         (a, (r, e))
@@ -170,8 +174,8 @@ impl PSF<MatPolynomialRingZq, (MatPolyOverZ, MatPolyOverZ), MatPolyOverZ, MatPol
             .into_coefficient_embedding_from_matrix(self.gp.modulus.get_degree());
         let rot_a = rot_minus_matrix(&a_embedded);
 
-        let u_embedded = MatZq::from((&u_embedded, &self.gp.q));
-        let rot_a = MatZq::from((&rot_a, &self.gp.q));
+        let u_embedded = MatZq::from((&u_embedded, &self.gp.modulus.get_q()));
+        let rot_a = MatZq::from((&rot_a, &self.gp.modulus.get_q()));
         let sol: MatZ = (&rot_a.solve_gaussian_elimination(&u_embedded).unwrap()).into();
 
         // turn center into a vector of polynomials over Q with maximal degree as the
