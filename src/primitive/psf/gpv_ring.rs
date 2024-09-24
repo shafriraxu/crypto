@@ -173,7 +173,10 @@ impl PSF<MatPolynomialRingZq, (MatPolyOverZ, MatPolyOverZ), MatPolyOverZ, MatPol
 
         let u_embedded = MatZq::from((&u_embedded, &self.gp.modulus.get_q()));
         let rot_a = MatZq::from((&rot_a, &self.gp.modulus.get_q()));
-        let sol: MatZ = (&rot_a.solve_gaussian_elimination(&u_embedded).unwrap()).into();
+        let sol: MatZ = rot_a
+            .solve_gaussian_elimination(&u_embedded)
+            .unwrap()
+            .get_mat();
 
         // turn center into a vector of polynomials over Q with maximal degree as the
         // modulus
