@@ -203,7 +203,7 @@ pub fn find_solution_gadget_vec(value: &Zq, k: &Z, base: &Z) -> MatZ {
 /// let sol = find_solution_gadget_mat(&value, &k, &base);
 ///
 /// assert_eq!(
-///     MatZ::from(&value),
+///     value.get_mat(),
 ///     gen_gadget_mat(3, &k, &base) * sol
 /// )
 /// ```
