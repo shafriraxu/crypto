@@ -203,7 +203,7 @@ pub fn find_solution_gadget_vec(value: &Zq, k: &Z, base: &Z) -> MatZ {
 /// let sol = find_solution_gadget_mat(&value, &k, &base);
 ///
 /// assert_eq!(
-///     MatZ::from(&value),
+///     value.get_mat(),
 ///     gen_gadget_mat(3, &k, &base) * sol
 /// )
 /// ```
@@ -375,7 +375,7 @@ mod test_find_solution_gadget {
         find_solution_gadget_mat, gen_gadget_mat, gen_gadget_vec,
     };
     use qfall_math::{
-        integer::{MatZ, Z},
+        integer::Z,
         integer_mod_q::{MatZq, Zq},
         traits::GetEntry,
     };
@@ -409,6 +409,6 @@ mod test_find_solution_gadget {
 
         let sol = find_solution_gadget_mat(&value, &k, &base);
 
-        assert_eq!(MatZ::from(&value), gen_gadget_mat(3, &k, &base) * sol)
+        assert_eq!(value.get_mat(), gen_gadget_mat(3, &k, &base) * sol)
     }
 }

@@ -8,7 +8,7 @@
 
 //! This module provides the trait a struct should implement if it is an
 //! instance of a public key encryption scheme. Furthermore, it contains
-//! cryptographic schemes implementing the [`PKEncryptionScheme`] trait.
+//! cryptographic schemes implementing the [`PKEncryptionScheme`] or [`PKEncryptionSchemeMut`] trait.
 //!
 //! The main references are listed in the following
 //! and will be further referenced in submodules by these numbers:
